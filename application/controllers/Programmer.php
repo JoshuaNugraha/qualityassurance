@@ -25,7 +25,7 @@ class Programmer extends CI_Controller
         $this->load->view('dashboard/index', $data);
     }
 
-      function get_komplain(){
+    function get_komplain(){
         $user = $this->input->post('user', true);
         $status = $this->input->post('status', true);
         $date_1 = $this->input->post('date_1', true);

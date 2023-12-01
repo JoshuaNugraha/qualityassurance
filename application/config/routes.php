@@ -18,3 +18,7 @@ $route['laporan-komplain'] = 'Cs/laporan_komplain';
 
 // programmer
 $route['komplain-list'] = 'Programmer/master_komplain';
+
+
+// QA
+$route['komplain-qa'] = 'Qa/master_qa';
