@@ -229,7 +229,9 @@ class Cs extends CI_Controller
                 }
                 if($in){
                     $uname_booble = $this->db->get_where('users_booble',['id' => $user_booble])->row('nm_user');
-                    $tele = $this->bot_tele->send_msg($device, 'Pending', $komplain, $uname_booble, $priority);
+                    $id_kom = $insert_id = $this->db->insert_id();
+                    $tele = $this->bot_tele->send_msg($id_kom, $device, 'Pending', $komplain, $uname_booble, $priority, 'new');
+                    // $send = $this->bot_tele->send_msg($get->id, $get->device, $get->status, $get->komplain, $get->nm_user, $get->priority, 'edit');
                     if($tele){
                            echo json_encode(['status' => true]);
                             
@@ -357,6 +359,18 @@ class Cs extends CI_Controller
 
         echo json_encode(['status' => true, 'html' => $html, 'sql' => $sql]);
         
+    }
+
+    function tambah_user(){
+        $data = array(
+            'nm_user' => $this->input->post('nama')
+        );
+        $in = $this->db->insert('users_booble', $data);
+        if($in){
+            echo json_encode(['status' => true]);
+        }else{
+            echo json_encode(['status' => false]);
+        }
     }
 
 }

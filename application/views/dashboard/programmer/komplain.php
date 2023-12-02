@@ -121,15 +121,15 @@
               <div class="row">
                 <div class="col-lg-9 col-md-8 col-sm-6">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-lg-3 col-sm-12">
                         <input type="text" class="form-control" id="date_filter" name="date_filter">
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-sm-12">
                         <select name="user_filter" id="user_booble_filter" class="select2 form-control ">
                                 <option value="">All User</option>
                         </select>
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-sm-12">
                         <select name="status_filter" id="status_filter" class="form-control">
                             <option value="">All Status</option>
                             <option value="Pending">Pending</option>
@@ -138,7 +138,17 @@
                             <option value="Testing QA">Testing QA</option>
                         </select>
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-sm-12">
+                        <select name="device_filter" id="device_filter" class="form-control">
+                            <option value="">All Devices</option>
+                            <option value="Web">Web</option>
+                            <option value="Tablet">Web</option>
+                            <option value="Potrait">Web</option>
+                            <option value="IOS">IOS</option>
+                        </select>
+                    </div>
+                   <div class="row mt-2">
+                     <div class="col-lg-3 col-sm-12">
                         <div class="row">
                             <div class="col-6">
                                 <button class="btn btn-info" type="button" onclick="filter_table()">Filter</button>
@@ -148,6 +158,7 @@
                             </div>   
                         </div>
                     </div>
+                   </div>
                     
                 </div>
                     
@@ -155,7 +166,7 @@
                 
 
               </div>
-              <div class="table-responsive p-0 mt-5">
+              <div class="table-responsive p-0 ">
                     <table class="table align-items-center mb-0 table-striped" id="datable2">
                                   <thead>
                                       <tr>

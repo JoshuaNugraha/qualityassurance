@@ -31,7 +31,74 @@
 }
 
 
+ 
+
+.input-group {
+  display: table;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.input-group > * {
+  display: table-cell;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.input-group-icon {
+  background-color: #5cb85c;
+  color: white;
+  padding: 0 20px;
+}
+.input-group-icon:hover{
+    cursor: pointer;
+}
+
+.input-group-area {
+  width: 100%;
+}
+
+.input-group select {
+  border: 0;
+  display: block;
+  width: 100%;
+  /* padding: 8px; */
+}
+
+
 </style>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="close_modal();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="tambah_user">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label for="nama_user">Nama User</label>
+                    <input type="text" class="form-control" id="nama_user">
+                </div>
+            </div>
+            
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="close_modal()">Close</button>
+        <button type="button" class="btn btn-primary" onclick="insert_user()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="container-fluid py-4">
       <div class="row" id="section1">
@@ -39,25 +106,29 @@
           <div class="card mb-4">
             <div class="card-header pb-0">
               <h6>Komplain table</h6>
-              
             </div>
             
             <div class="card-body px-4 pt-0 pb-2">
-              <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <button class="btn bg-gradient-dark mb-0" onclick="section2();"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-                </div>
-                <div class="col-lg-9 col-md-8 col-sm-6">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <button class="btn bg-gradient-dark mb-0" onclick="section2();"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+                    </div>
+                </div>  
+                <div class="row mt-3">
+                    <div class="col-lg-3 col-sm-12">
                         <input type="text" class="form-control" id="date_filter" name="date_filter">
                     </div>
-                    <div class="col-3">
-                        <select name="user_filter" id="user_booble_filter" class="select2 form-control ">
-                                <option value="">All User</option>
-                        </select>
+                    <div class="col-lg-3 col-sm-12">
+                         <label class="input-group">
+                            <div class="input-group-area">
+                                <select name="user_filter" id="user_booble_filter" class="select2 form-control ">
+                                        <option value="">All User</option>
+                                </select>
+                            </div>
+                            <div class="input-group-icon" onclick="tambah_user()" >+</div>
+                        </label>
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-sm-12">
                         <select name="status_filter" id="status_filter" class="form-control">
                             <option value="">All Status</option>
                             <option value="Pending">Pending</option>
@@ -65,25 +136,20 @@
                             <option value="Selesai">Selesai</option>
                             <option value="Testing QA">Testing QA</option>
                         </select>
-                    </div>
-                    <div class="col-3">
+                    </div> 
+                    <div class="col-lg-3 col-sm-12">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <button class="btn btn-info" type="button" onclick="filter_table()">Filter</button>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <button class="btn btn-warning" type="button" onclick="reset_filter()">Reset</button>
                             </div>   
                         </div>
                     </div>
-                    
                 </div>
-                    
-                </div>
-                
-
               </div>
-              <div class="table-responsive p-0 mt-5">
+              <div class="table-responsive p-0 mt-5 px-3">
                     <table class="table align-items-center mb-0 table-striped" id="datable2">
                                   <thead>
                                       <tr>
@@ -164,9 +230,8 @@
                                         <div class="col-10"><input type="file" class="form-control file_komplain" id="file_1" name="file_1[]"></div>
                                         <div class="col-2"><button class="btn btn-danger" type="button" onclick="reset_input()">X</button>                           </div>           
                                     </div>
-                                    
                                 </div>
-                                 <button class="btn btn-warning" type="button" onclick="add_file()"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-warning" type="button" onclick="add_file()"><i class="fa fa-plus"></i></button>
                             </div>
                          </div>
                          <div class="row">
@@ -285,8 +350,35 @@
             $("#section2").hide();
             $("#section1").show();
             $("#form_komplain").trigger('reset');
+            $('#form_komplain')[0].reset();
+            // $("#container_file").html('<div class="file_row row">'+
+            //                             '<div class="col-10"><input type="file" class="form-control file_komplain" id="file_1" name="file_1[]"></div>'+
+            //                             '<div class="col-2"><button class="btn btn-danger" type="button" onclick="reset_input()">X</button>'+
+            //                             '</div>'+
+            //                             '</div>')
+            
+            reset_files();
             $('#aksi').val('1');
             load_user_booble();
+        }
+
+        function reset_files(){
+            // $("#file_1").val('');
+            // reset_input();
+            var fileRows = document.querySelectorAll('.file_row');
+            var fileRowCount = fileRows.length;
+            for(let i = 1 ; i < fileRowCount; i++){
+                $("#row_"+i).remove();
+            }
+            $("#container_file").html(' <label for="file_1">File</label>'+
+                                    '<div class="file_row row">'+
+                                        '<div class="col-10"><input type="file" class="form-control file_komplain" id="file_1" name="file_1[]"></div>'+
+                                        '<div class="col-2"><button class="btn btn-danger" type="button" onclick="reset_input()">X</button></div>'+
+                                '</div>');
+            // var row = button.closest('.file_row');
+
+            // // Remove the row
+            // row.remove();
         }
         function section2(){
             $("#section1").hide();
@@ -319,7 +411,12 @@
         }
 
         function reset_input(){
-            $("#file_1").val('');
+            // $("#file_1").val('');
+            
+        var newFileInput = $('<input type="file" class="form-control file_komplain" id="file_1" name="file_1[]">');
+
+        // Replace the original file input with the new one
+        $('#file_1').replaceWith(newFileInput);
         }
         function del_field(id){
             
@@ -431,7 +528,7 @@
             }
             });
         }
-
+        
         function del_field_edit(id, id_row){
              Swal.fire({
                     title: 'Hapus file dari komplain?',
@@ -487,7 +584,33 @@
             $("#user_booble_filter").val('').change();
             table();
         }
+
+        function tambah_user(){
+            $("#exampleModal").modal('show');
+        }
          
+        function insert_user(){
+            let nama = $("#nama_user").val();
+            $.ajax({
+                method : 'POST',
+                url : 'cs/tambah_user' ,
+                data : {nama} ,
+                dataType : 'JSON' ,
+                success : function(data){
+                    if(data.status){
+                        swal.fire('Berhasil', '', 'success');
+                        $("#nama_user").val('');
+                        $("#exampleModal").modal('hide');
+                        load_user_booble();
+                    }
+                }
+            });
+        }
+
+        function close_modal(){
+            $("#nama_user").val('');
+            $("#exampleModal").modal('hide');
+        }
         
         
 
