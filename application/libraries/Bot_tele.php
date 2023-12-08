@@ -8,7 +8,7 @@ class Bot_tele{
     private $jojo = '1889801709';
     private $hadyan = '225684335';
     private $aldi = '225684335';
-    private $taufik = '';
+    private $taufik = '276104149';
     private $cs     = '978887178';
     private $muflih = '';
 
@@ -27,7 +27,7 @@ class Bot_tele{
             $tag = "<a href='tg://user?id=$this->hadyan'>Hadyan</a> \n<b>Device</b> :".$device."";
         }
         if($device == 'Web'){
-            $tag = "<a href='tg://user?id=$this->jojo'>Taufik</a> \n<b>Device</b> :".$device."" ;
+            $tag = "<a href='tg://user?id=$this->taufik'>Taufik</a> \n<b>Device</b> :".$device."" ;
         }
 
         if($tipe == "new"){

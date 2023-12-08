@@ -27,7 +27,7 @@ class Admin extends CI_Model
     function get_menu($gid){
         $get = $this->db->query("SELECT a.* FROM menu a
         JOIN menu_groups b on a.id=b.id_menu
-        WHERE b.id_group = '$gid'
+        WHERE b.id_group = '$gid' AND a.status= '1'
         ORDER BY a.urut ASC
         ")->result();
 

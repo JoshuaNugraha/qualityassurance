@@ -63,13 +63,14 @@ class Cs extends CI_Controller
         }
 
 
-        $query = $this->db->select(['a.id', 'a.id_user_booble','a.komplain' , 'a.priority', 'a.status', 'a.device'])
+        $query = $this->db->select(['a.id', 'a.id_user_booble','a.komplain' , 'a.priority', 'a.status', 'a.device', 'DATE(a.create_at) as create_at'])
         ->where($where)
         ->or_where('tipe', 'Request CS')
-        ->from('komplain a');
-        $column_order = array('a.create_at');
+        ->from('komplain a')
+        ->order_by('a.create_at', 'desc');
+        $column_order = array('id', 'create_at');
 		$column_search = array('a.id', 'a.create_at');
-		$order = array('a.id' => 'DESC');
+		$order = array('a.create_at' => 'DESC');
         
 		$list = $this->datatables->get_datatables($query, $column_order, $column_search, $order);
 		$data = array();
@@ -80,6 +81,7 @@ class Cs extends CI_Controller
         $priority = array('Very Low', 'Low', 'Medium', 'High', 'Very High', 'Emergency');
         foreach ($list['result'] as $tampil) {
             $row['no'] = $i;
+            $row['tgl_masuk'] = $tampil->create_at;
             $get_user = $this->db->get_where('users_booble', ['id' => $tampil->id_user_booble])->row('nm_user');
             $row['nm_user'] = $get_user;        
             $row['komplain'] =   $tampil->komplain;
@@ -218,9 +220,11 @@ class Cs extends CI_Controller
                         $do_up = $this->_do_upload2('file_1', 'assets/upload/komplain',  $_FILES['file_1']['name'][$x], $x);
                         if($do_up){
                             $arr_file_up = array(
-                                'id_komplain' => $id_kom,
-                                'file' => $do_up
+                                    'id_komplain' => $id_kom,
+                                    'file' => $do_up['file_name'],
+                                    'tipe' => $do_up['ext']
                             );
+
 
                             $in = $this->db->insert('komplain_file', $arr_file_up);
                             
@@ -229,11 +233,11 @@ class Cs extends CI_Controller
                 }
                 if($in){
                     $uname_booble = $this->db->get_where('users_booble',['id' => $user_booble])->row('nm_user');
-                    $id_kom = $insert_id = $this->db->insert_id();
+                  
                     $tele = $this->bot_tele->send_msg($id_kom, $device, 'Pending', $komplain, $uname_booble, $priority, 'new');
                     // $send = $this->bot_tele->send_msg($get->id, $get->device, $get->status, $get->komplain, $get->nm_user, $get->priority, 'edit');
                     if($tele){
-                           echo json_encode(['status' => true]);
+                           echo json_encode(['status' => true, 'id' => $id_kom]);
                             
                     }else{
                         echo json_encode(['status' => false, 'here' => 'no']);
@@ -264,7 +268,8 @@ class Cs extends CI_Controller
                             if($do_up){
                                 $arr_file_up = array(
                                     'id_komplain' => $id,
-                                    'file' => $do_up
+                                    'file' => $do_up['file_name'],
+                                    'tipe' => $do_up['ext']
                                 );
 
                                 $this->db->insert('komplain_file', $arr_file_up);
@@ -292,7 +297,14 @@ class Cs extends CI_Controller
         if (in_array($ekstensi, $ekstensi_diperbolehkan) === true) {
             if ($ukuran < 100044070) {
                 if (move_uploaded_file($file_tmp, $folder . '/' . $newfilename)) {
-                    return $newfilename;
+                    if($ekstensi=="png" || $ekstensi == "jpg" || $ekstensi == "jpeg"){
+                        $tipe_ext = 'foto';
+                    }else{
+                        $tipe_ext = 'video';
+                    }
+                    $data['file_name'] = $newfilename;
+                    $data['ext'] = $tipe_ext;
+                    return $data;
                 } else {
                     $data['message']    = 'Upload error: Gagal upload file...'.$inputname;
                     $data['status']        = FALSE;
@@ -367,6 +379,18 @@ class Cs extends CI_Controller
         );
         $in = $this->db->insert('users_booble', $data);
         if($in){
+            echo json_encode(['status' => true]);
+        }else{
+            echo json_encode(['status' => false]);
+        }
+    }
+
+    function hapus_komplain(){
+        $id = $this->input->post('id', true);
+        $this->db->where('id', $id);
+        $del = $this->db->delete('komplain');
+
+        if($del) {
             echo json_encode(['status' => true]);
         }else{
             echo json_encode(['status' => false]);

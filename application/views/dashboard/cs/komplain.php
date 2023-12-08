@@ -139,12 +139,11 @@
                     </div> 
                     <div class="col-lg-3 col-sm-12">
                         <div class="row">
-                            <div class="col-5">
-                                <button class="btn btn-info" type="button" onclick="filter_table()">Filter</button>
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-warning" type="button" onclick="reset_filter()">Reset</button>
-                            </div>   
+                            
+                                <button class="btn btn-info" style="width:100px; margin-right:0.2rem;" type="button" onclick="filter_table()">Filter</button>
+                           
+                                <button class="btn btn-warning" style="width:100px;" type="button" onclick="reset_filter()">Reset</button>
+                              
                         </div>
                     </div>
                 </div>
@@ -154,6 +153,8 @@
                                   <thead>
                                       <tr>
                                           <th class="text-uppercase text-secondary text-xs font-weight-bolder ">No</th>
+                                          <th class="text-uppercase text-secondary text-xs font-weight-bolder ">Tgl Masuk</th>
+
                                           <th class="text-uppercase text-secondary text-xs font-weight-bolder">User</th>
                                           <th class="text-uppercase text-secondary text-xs font-weight-bolder" style="width:100px; overflow-wrap: break-word !important;">Komplain</th>
                                           <th class="text-uppercase text-secondary text-xs font-weight-bolder">Priority</th>
@@ -185,17 +186,23 @@
                    <button class="btn bg-gradient-dark mb-0" onclick="section1();"><i class="fa fa-arrow-left" aria-hidden="true"></i> Kembali</button>
                     <form action="" role="form" id="form_komplain">
                          <div class="row">
-                            <div class="col-6">
+                            <div class="col-lg-6 col-sm-12">
                                  <div class="form-group">
-                                    <label for="nm_lengkap">User</label>
-                                    <!-- <input type="text" class="form-control" id="nm_lengkap" name="nm_lengkap" aria-describedby="emailHelp" placeholder="Enter name"> -->
-                                    <select name="user_booble" id="user_booble" class="select2 form-control">
-                                        
-                                    </select>
+                                     <label for="nm_lengkap">User</label>
+                                    <div class="input-group">            
+                                        <div class="input-group-area">
+                                                    <select name="user_booble" id="user_booble" class="select2 form-control">
+                                                        
+                                                    </select>   
+                                        </div>
+                                             <div class="input-group-icon" onclick="tambah_user()" >+</div>
+                                    </div>
+                                    
+                                    
                                   
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-sm-12">
                                  <div class="form-group">
                                     <label for="otoritas">Prioritas</label>
                                         <select class="form-control select2"  id="priority" name="priority">
@@ -210,7 +217,7 @@
                             </div>
                          </div>
                          <div class="row">
-                            <div class="col-6">
+                            <div class="col-lg-6 col-sm-12">
                                  <div class="form-group">
                                     <label for="device">Device</label>
                                     <!-- <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email"> -->
@@ -223,7 +230,7 @@
                                     </select>  
                                 </div>
                             </div>
-                            <div class="col-6  ">
+                            <div class="col-lg-6 col-sm-12">
                                  <div class="form-group" id="container_file">
                                     <label for="file_1">File</label>
                                     <div class="file_row row">
@@ -304,6 +311,10 @@
                 "columns": [ 
                         {
                             "data": "no",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "tgl_masuk",
                             "className": "text-center"
                         },
                         {
@@ -473,6 +484,16 @@
                     contentType: false,
                     processData: false,
                     dataType : 'JSON' ,
+                     beforeSend: function() {
+                        swal.fire({
+                            html: '<h5>Loading...</h5>',
+                            showConfirmButton: false,
+                            onRender: function() {
+                                // there will only ever be one sweet alert open.
+                                $('.swal2-content').prepend(sweet_loader);
+                            }
+                        });
+                    },
                     success : function(data){
                         if(data.status){
                             Swal.fire('Berhasil', 'Komplain berhasil ditambah', 'success');
@@ -503,7 +524,6 @@
                     $("#priority").val(data.data.komplain.priority).change();
                     $("#device").val(data.data.komplain.device).change();
                     $("#komplain").val(data.data.komplain.komplain);
-                    
                     $("#aksi").val('2');
                     $("#id").val(data.data.komplain.id);
                     let pjg = data.data.file.length;
@@ -511,7 +531,6 @@
                     if( pjg > 0){
                         $("#container_file").html(' <label for="file_1">File</label>');
                         for(let i = 0; i < pjg; i++){
-                          
                             console.log("file " + data.data.file[i].file);
                             $("#container_file").append('<div class="file_row row" id="row_'+i+'">'+
                                         '<div class="col-10"><input type="text" class="form-control file_komplain" id="file_'+i+'"  value="'+data.data.file[i].file+'" readonly></div>'+
@@ -520,13 +539,52 @@
                             '</div>');
                         }
                     }else{
-                       
+                        
                     }
                     section2();
 
                 }
             }
             });
+        }
+
+        function hapus(id){
+            Swal.fire({
+                title : 'Hapus komplain?',
+                text: 'Aksi ini tidak dapat dikembalikan',
+                confirmButtonText: 'Ok',
+                icon:'warning',
+                showCancelButton: true,
+                cancelButtonText: "Batal"
+                
+            }).then((result) => {
+                if(result.isConfirmed){
+                    $.ajax({
+                    method : 'POST',
+                    url : 'cs/hapus_komplain' ,
+                    data : {id} ,
+                    dataType : 'JSON' ,
+                    beforeSend: function() {
+                        swal.fire({
+                            html: '<h5>Loading...</h5>',
+                            showConfirmButton: false,
+                            onRender: function() {
+                                // there will only ever be one sweet alert open.
+                                $('.swal2-content').prepend(sweet_loader);
+                            }
+                        });
+                    },
+                    success : function(data){
+                        if(data.status){
+                            swal.fire('Berhasil', '', 'success');
+                            table();
+                        }else{
+                            swal.fire('Gagal', 'Terjadi kesalahan serevr', 'error');
+                        }
+                    }
+                    });
+                }
+            })
         }
         
         function del_field_edit(id, id_row){

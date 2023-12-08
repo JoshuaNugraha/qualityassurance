@@ -47,11 +47,11 @@ class Programmer extends CI_Controller
         }
 
 
-        $query = $this->db->select(['a.id', 'a.id_user_booble','a.komplain' , 'a.priority', 'a.status', 'a.device'])
+        $query = $this->db->select(['a.id', 'a.create_at' , 'a.id_user_booble','a.komplain' , 'a.priority', 'a.status', 'a.device'])
         ->where($where)
         ->or_where('tipe', 'Request CS')
         ->from('komplain a');
-        $column_order = array('a.create_at');
+        $column_order = array('a.create_at', '');
 		$column_search = array('a.id', 'a.create_at');
 		$order = array('a.id' => 'DESC');
         
