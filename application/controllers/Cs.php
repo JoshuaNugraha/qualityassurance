@@ -14,7 +14,7 @@ class Cs extends CI_Controller
         //     redirect('404_override', 'refresh');
         //   }
         $this->load->library('bot_tele');
-
+        $this->load->library('Tools');
         $this->load->model('Admin');
         
 
@@ -368,8 +368,12 @@ class Cs extends CI_Controller
 
             $no++;
         }
+        $periode_lap = $this->tools->date_to_day($date_1);
+        if($date_1 != $date_2){
+            $periode_lap .= " - ". $this->tools->date_to_day($date_2);
+        }
 
-        echo json_encode(['status' => true, 'html' => $html, 'sql' => $sql]);
+        echo json_encode(['status' => true, 'html' => $html, 'sql' => $sql, 'periode' => $periode_lap]);
         
     }
 
@@ -394,6 +398,31 @@ class Cs extends CI_Controller
             echo json_encode(['status' => true]);
         }else{
             echo json_encode(['status' => false]);
+        }
+    }
+
+    function get_komplain_dashboard(){
+        $data = $this->Admin->get_komplain_dahsboard();
+
+        if($data){
+            echo json_encode(['status' => true, 'data' => $data]);
+        }else{
+            echo json_encode(['status' => false]);
+        }
+    }
+
+    function get_chart(){
+        $periode = $this->input->post('periode', true);
+        $data = $this->Admin->get_chart($periode);
+        echo json_encode(['status' => true, 'data' => $data]);
+    }
+
+    function get_most_complain(){
+        $data = $this->Admin->get_most_complain();
+        if(!$data){
+            echo json_encode(['status' => false]);
+        }else{
+           echo json_encode(['status' => true, "data" => $data]);
         }
     }
 

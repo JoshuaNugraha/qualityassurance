@@ -32,9 +32,7 @@ class Dashboard extends CI_Controller
         }elseif($group_id == '2'){
             $data['page'] = 'qa/dashboard';
             $this->load->view('dashboard/index', $data);
-        }elseif($group_id == '3'){
-            $this->load->view('dashboard/direktur');
-        }elseif($group_id == '4'){
+        }elseif($group_id == '4' || '3'){
             $data['page'] = 'cs/dashboard';
             $this->load->view('dashboard/index', $data);
         }elseif($group_id == '5'){
