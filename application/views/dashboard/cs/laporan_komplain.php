@@ -172,6 +172,7 @@
             dataType : 'JSON' ,
             success : function(data){
                 if(data.status){
+                    $("#tgl_komp").html(data.periode);
                     $("#body_review").html(data.html);
                 }
             }
